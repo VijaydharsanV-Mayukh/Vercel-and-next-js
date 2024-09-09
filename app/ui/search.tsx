@@ -4,15 +4,15 @@ import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function Search({ placeholder }: { placeholder: string }) { // Added placeholder as a prop
+export default function Search({ placeholder }: { placeholder: string }) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
-  const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || ''); // Initialize state
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('query') || '');
 
   function handleSearch(term: string) {
-    console.log(`Searching... ${term}`);
     const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
     if (term) {
       params.set('query', term);
     } else {
@@ -30,12 +30,10 @@ export default function Search({ placeholder }: { placeholder: string }) { // Ad
         id="search"
         type="text"
         value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-          handleSearch(e.target.value); // Consolidated the onChange logic
-        }}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500"
-        placeholder={placeholder} // Use the placeholder prop
+        placeholder={placeholder}
+        onBlur={() => handleSearch(searchTerm)}
       />
       <MagnifyingGlassIcon className="absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
     </div>
